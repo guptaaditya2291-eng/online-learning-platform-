@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ArchiLearn: Build Your Knowledge</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Custom Styles -->
+    <style>
+        /* 1. ROOT VARIABLES & RESET */
+        :root {
+            --architect-blue: #3b82f6;
+            --architect-blue-light: #bfdbfe;
+            --architect-blue-dark: #2563eb;
+            --architect-gray: #6b7280;
+            --architect-gray-light: #f3f4f6;
+            --architect-gray-dark: #374151;
+            --white: #ffffff;
+            --gray-100: #f3f4f6;
+            --gray-200: #e5e7eb;
+            --gray-500: #6b7280;
+            --gray-600: #4b5563;
+            --gray-700: #374151;
+            --gray-800: #1f2937;
+            --green-100: #d1fae5;
+            --green-600: #059669;
+            --green-800: #065f46;
+            --blue-100: #dbeafe;
+            --blue-300: #93c5fd;
+            --blue-800: #1e40af;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa; /* Off-white, clean feel */
+            color: var(--architect-gray-dark);
+            line-height: 1.6;
+        }
+
+        /* 2. CORE HELPERS & ANIMATIONS */
+        .view-hidden {
+            display: none !important;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        button {
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.875rem; /* 14px */
+            font-weight: 500;
+            transition: background-color 0.2s ease, transform 0.2s ease;
+        }
+
+        button:hover {
+            transform: translateY(-1px);
+        }
+
+        /* 3. LAYOUT (NAV & MAIN) */
+        nav {
+            background-color: var(--white);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            height: 4rem; /* 64px */
+        }
+        
+        .nav-container {
+            max-width: 80rem; /* 1280px */
+            margin: 0 auto;
+            padding: 0 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 100%;
+        }
+
+        .nav-logo {
+            font-size: 1.5rem; /* 24px */
+            font-weight: 700;
+            color: var(--architect-blue);
+        }
+
+        .nav-links {
+            display: none; /* Hidden on mobile */
+        }
+
+        @media (min-width: 640px) {
+            .nav-links {
+                display: flex;
+                align-items: center;
+                gap: 2rem; /* 32px */
+            }
+        }
+        
+        .nav-links a {
+            text-decoration: none;
+            color: var(--gray-500);
+            font-size: 0.875rem; /* 14px */
+            font-weight: 500;
+            padding-top: 0.25rem;
+            padding-bottom: 0.25rem;
+            border-bottom: 2px solid transparent;
+            transition: color 0.2s, border-color 0.2s;
+        }
+
+        .nav-links a:hover {
+            color: var(--gray-700);
+            border-bottom-color: var(--gray-300);
+        }
+        
+        .nav-links a.active {
+            color: var(--gray-800);
+            border-bottom-color: var(--architect-blue);
+        }
+        
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem; /* 16px */
+        }
+        
+        .nav-button-secondary {
+            background: none;
+            color: var(--architect-blue);
+            font-weight: 500;
+        }
+        .nav-button-secondary:hover {
+            color: var(--architect-blue-dark);
+        }
+        
+        .nav-button-primary {
+            background-color: var(--architect-blue);
+            color: var(--white);
+            padding: 0.5rem 1rem;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .nav-button-primary:hover {
+            background-color: var(--architect-blue-dark);
+        }
+        
+        .nav-user-greeting {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: var(--gray-500);
+            display: none; /* Hidden on mobile */
+        }
+        @media (min-width: 640px) {
+            .nav-user-greeting {
+                display: inline;
+            }
+        }
+
+        main {
+            max-width: 80rem; /* 1280px */
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        /* 4. COMPONENT STYLES */
+        
+        /* Blueprint Card */
+        .blueprint-card {
+            background: var(--white);
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border-left: 6px solid var(--architect-blue);
+            padding: 1.5rem; /* 24px */
+        }
+        .blueprint-card:hover {
+            box-shadow: 0 10px 15px rgba(0,0,0,0.07);
+        }
+        .blueprint-card h3 {
+            font-size: 1.25rem; /* 20px */
+            font-weight: 700;
+            color: var(--architect-blue);
+            margin-bottom: 0.5rem;
+        }
+        .blueprint-card p {
+            font-size: 0.9rem;
+            color: var(--gray-600);
+        }
+        
+        /* Keystone Item */
+        .keystone-item {
+             background: var(--white);
+             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+             border-radius: 8px;
+             padding: 1rem;
+             display: flex;
+             align-items: center;
+             justify-content: space-between;
+             gap: 1rem;
+        }
+        .keystone-item h3 {
+            font-weight: 700;
+            color: var(--architect-gray-dark);
+        }
+        .keystone-item p {
+            font-size: 0.875rem;
+            color: var(--gray-500);
+        }
+        .keystone-item .grade {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--green-600);
+        }
+        
+        /* Basic Card */
+        .card {
+            background: var(--white);
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            padding: 1.5rem; /* 24px */
+        }
+        
+        /* General Typography */
+        h1 {
+            font-size: 2rem; /* 32px */
+            font-weight: 800;
+            color: var(--architect-gray-dark);
+            margin-bottom: 1.5rem;
+        }
+        h2 {
+            font-size: 1.5rem; /* 24px */
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        /* 5. VIEW-SPECIFIC STYLES */
+
+        /* View 1: Public Homepage */
+        .hero {
+            text-align: center;
+            background: var(--white);
+            padding: 3rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 10px 15px rgba(0,0,0,0.05);
+        }
+        .hero h1 {
+            font-size: 2.5rem; /* 40px */
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            margin-bottom: 1rem;
+        }
+        @media (min-width: 640px) {
+            .hero h1 {
+                font-size: 3rem; /* 48px */
+            }
+        }
+        .hero .subtitle {
+            font-size: 1.25rem;
+            color: var(--architect-gray);
+            margin-bottom: 1.5rem;
+        }
+        .hero .subtitle span {
+            font-weight: 700;
+            color: var(--architect-blue);
+        }
+        .hero .description {
+            max-width: 40rem;
+            margin: 0 auto 2rem auto;
+            color: var(--gray-500);
+            font-size: 1.125rem;
+        }
+        .hero .hero-button {
+            background-color: var(--architect-blue);
+            color: var(--white);
+            font-size: 1.125rem; /* 18px */
+            padding: 0.75rem 2rem;
+            border-radius: 8px;
+            font-weight: 600;
+            box-shadow: 0 4px 6px rgba(59, 130, 246, 0.3);
+        }
+        .hero .hero-button:hover {
+            background-color: var(--architect-blue-dark);
+            transform: scale(1.05);
+        }
+
+        /* Demo Login Modal */
+        #demo-login-modal {
+            position: fixed;
+            inset: 0;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 50;
+        }
+        .modal-content {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 20px 25px rgba(0,0,0,0.1);
+            max-width: 24rem; /* 384px */
+            width: 100%;
+            text-align: center;
+        }
+        .modal-content h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        .modal-content p {
+            color: var(--gray-600);
+            margin-bottom: 1.5rem;
+        }
+        .modal-content .modal-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .modal-content button {
+            width: 100%;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 8px;
+        }
+        .modal-button-student {
+            background-color: var(--architect-blue);
+            color: var(--white);
+        }
+        .modal-button-student:hover {
+            background-color: var(--architect-blue-dark);
+        }
+        .modal-button-teacher {
+            background-color: var(--gray-700);
+            color: var(--white);
+        }
+        .modal-button-teacher:hover {
+            background-color: var(--gray-800);
+        }
+        .modal-button-cancel {
+            margin-top: 1.5rem;
+            font-size: 0.875rem;
+            color: var(--gray-500);
+            background: none;
+        }
+        .modal-button-cancel:hover {
+            color: var(--gray-700);
+        }
+
+        /* Features Section */
+        .features-grid {
+            margin-top: 3rem;
+            display: grid;
+            gap: 2rem;
+        }
+        @media (min-width: 768px) {
+            .features-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        .feature-card {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .feature-card h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--architect-blue);
+            margin-bottom: 0.5rem;
+        }
+        .feature-card p {
+            color: var(--gray-600);
+        }
+
+        /* View 2 & 3: Student & Teacher Dashboards */
+        .dashboard-grid {
+            display: grid;
+            gap: 2rem;
+        }
+        @media (min-width: 1024px) {
+            .dashboard-grid {
+                grid-template-columns: 2fr 1fr;
+            }
+        }
+        
+        .dashboard-main, .dashboard-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        
+        .progress-bar-container {
+            width: 100%;
+            background-color: var(--gray-200);
+            border-radius: 99px;
+            height: 0.625rem; /* 10px */
+            overflow: hidden;
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        .progress-bar {
+            background-color: var(--architect-blue);
+            height: 100%;
+            border-radius: 99px;
+        }
+        
+        .toolbox-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .toolbox-tags span {
+            font-size: 0.875rem;
+            font-weight: 500;
+            padding: 0.25rem 0.75rem;
+            border-radius: 99px;
+        }
+        .tag-blue { background-color: var(--blue-100); color: var(--blue-800); }
+        .tag-green { background-color: var(--green-100); color: var(--green-800); }
+        .tag-gray { background-color: var(--gray-100); color: var(--gray-800); }
+
+        .sidebar-link {
+            font-weight: 500;
+            color: var(--architect-blue);
+            text-decoration: none;
+        }
+        .sidebar-link:hover {
+            text-decoration: underline;
+        }
+
+        .button-light {
+            background-color: var(--architect-blue-light);
+            color: var(--architect-blue-dark);
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            align-self: flex-start;
+        }
+        .button-light:hover {
+            background-color: var(--blue-300);
+        }
+        
+        .button-full {
+             width: 100%;
+             padding: 0.75rem 1rem;
+             font-size: 0.9rem;
+        }
+        
+        /* View 4: Courses */
+        .tabs {
+            border-bottom: 1px solid var(--gray-200);
+            margin-bottom: 1.5rem;
+        }
+        .tab-nav {
+            display: flex;
+            gap: 2rem;
+        }
+        .tab-button {
+            background: none;
+            border: none;
+            padding: 1rem 0.25rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            border-bottom: 2px solid transparent;
+            color: var(--gray-500);
+        }
+        .tab-button:hover {
+            color: var(--gray-700);
+            border-bottom-color: var(--gray-300);
+        }
+        .tab-button.active {
+            color: var(--architect-blue);
+            border-bottom-color: var(--architect-blue);
+        }
+        
+        .course-grid {
+            display: grid;
+            gap: 1.5rem;
+        }
+        @media (min-width: 768px) {
+            .course-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        @media (min-width: 1024px) {
+            .course-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        
+        /* View 5: Keystones */
+        .keystones-grid {
+            display: grid;
+            gap: 2rem;
+        }
+        @media (min-width: 768px) {
+            .keystones-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        .keystone-column {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .keystone-submit-button {
+            background-color: var(--architect-blue);
+            color: var(--white);
+            padding: 0.5rem 1rem;
+        }
+        .keystone-submit-button:hover {
+            background-color: var(--architect-blue-dark);
+        }
+        
+        /* View 6 & 7: Mock Tests & Reports */
+        .test-item {
+            margin-top: 1rem;
+            padding: 1rem;
+            border: 1px solid var(--gray-200);
+            border-radius: 8px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+        }
+        .test-item h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--architect-blue);
+            margin: 0;
+        }
+        .test-item p {
+            font-size: 0.875rem;
+            color: var(--gray-500);
+            margin: 0;
+        }
+        .start-test-button {
+            background-color: var(--architect-blue);
+            color: var(--white);
+            padding: 0.5rem 1rem;
+        }
+        .start-test-button:hover {
+            background-color: var(--architect-blue-dark);
+        }
+        .report-item {
+            margin-top: 1rem;
+            padding: 1rem;
+            border: 1px solid var(--gray-200);
+            border-radius: 8px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="app-container">
+
+        <!-- 1. Public Navbar (Logged Out) -->
+        <nav id="navbar-public">
+            <div class="nav-container">
+                <div class="nav-logo">ArchiLearn</div>
+                <div class="nav-links">
+                    <a href="#" onclick="app.showView('courses')">Blueprints (Courses)</a>
+                    <a href="#" onclick="app.showView('mock-tests')">Mock Tests</a>
+                    <a href="#" onclick="app.showDemoLogin()">Student Reports</a>
+                </div>
+                <div class="nav-actions">
+                    <button onclick="app.showDemoLogin()" class="nav-button-secondary">Log In</button>
+                    <button onclick="app.showDemoLogin()" class="nav-button-primary">Start Building</button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- 2. Student Navbar (Logged In) -->
+        <nav id="navbar-student" class="view-hidden">
+            <div class="nav-container">
+                <div class="nav-logo">ArchiLearn</div>
+                <div class="nav-links">
+                    <a href="#" onclick="app.showView('student')" class="active">My Workshop</a>
+                    <a href="#" onclick="app.showView('courses', 'student')">Blueprint Library</a>
+                    <a href="#" onclick="app.showView('keystones')">My Keystones</a>
+                    <a href="#" onclick="app.showView('mock-tests')">Mock Tests</a>
+                    <a href="#">My Portfolio</a>
+                </div>
+                <div class="nav-actions">
+                    <span class="nav-user-greeting">Welcome, Apprentice!</span>
+                    <button onclick="app.logout()" class="nav-button-secondary">Log Out</button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- 3. Teacher Navbar (Logged In) -->
+        <nav id="navbar-teacher" class="view-hidden">
+            <div class="nav-container">
+                <div class="nav-logo">ArchiLearn</div>
+                <div class="nav-links">
+                    <a href="#" onclick="app.showView('teacher')" class="active">Master's Hub</a>
+                    <a href="#" onclick="app.showView('courses', 'teacher')">PD Blueprints</a>
+                    <a href="#">My Credentials</a>
+                    <a href="#">Faculty Lounge</a>
+                    <a href="#" onclick="app.showView('student-reports')">Student Reports</a>
+                    <a href="#">Resource Library</a>
+                </div>
+                <div class="nav-actions">
+                    <span class="nav-user-greeting">Welcome, Master Architect!</span>
+                    <button onclick="app.logout()" class="nav-button-secondary">Log Out</button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- MAIN CONTENT AREA -->
+        <main id="content-container">
+
+            <!-- 1. Public View: Homepage -->
+            <div id="view-public" class="fade-in">
+                <!-- Hero Section -->
+                <div class="hero">
+                    <h1>The Blueprint of Your Future</h1>
+                    <p class="subtitle">Don't just learn. <span>Build.</span></p>
+                    <p class="description">
+                        At ArchiLearn, you are the apprentice, our courses are the blueprints, and your skills are the masterpiece.
+                    </p>
+                    <button class="hero-button">
+                        Start Building Your Portfolio
+                    </button>
+                </div>
+                
+                <!-- Demo Login Modal -->
+                <div id="demo-login-modal" class="view-hidden">
+                    <div class="modal-content">
+                        <h3>Choose Your Path</h3>
+                        <p>For this demo, which role would you like to explore?</p>
+                        <div class="modal-buttons">
+                            <button onclick="app.login('student')" class="modal-button-student">
+                                Log In as Student (Apprentice)
+                            </button>
+                            <button onclick="app.login('teacher')" class="modal-button-teacher">
+                                Log In as Teacher (Master Architect)
+                            </button>
+                        </div>
+                        <button onclick="app.hideDemoLogin()" class="modal-button-cancel">Cancel</button>
+                    </div>
+                </div>
+
+                <!-- Features Section -->
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <h3>Master Blueprints</h3>
+                        <p>Explore courses designed like real-world projects. From "Phase 1: Foundations" to your final "Master Build," you'll learn by doing.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>Practice with Mock Tests</h3>
+                        <p>Sharpen your skills and prepare for real-world challenges with our extensive library of mock tests and assessments.</p>
+                    </div>
+                    <div class="feature-card">
+                        <h3>For Master Architects</h3>
+                        <p>We offer professional development blueprints for teachers, from classroom tech to pedagogical design.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. Student View: My Workshop (Dashboard) -->
+            <div id="view-student" class="view-hidden fade-in">
+                <h1>My Workshop</h1>
+                <div class="dashboard-grid">
+                    <!-- Left Column: In Progress -->
+                    <div class="dashboard-main">
+                        <h2>Projects in Progress</h2>
+                        
+                        <div class="blueprint-card">
+                            <h3>Blueprint: The Foundation of Python</h3>
+                            <p>Phase 2: Framing the Structure</p>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar" style="width: 45%"></div>
+                            </div>
+                            <p style="font-size: 0.875rem; color: var(--gray-600);">45% Complete</p>
+                        </div>
+                        
+                        <div class="blueprint-card">
+                            <h3>Blueprint: Modern Graphic Design</h3>
+                            <p>Phase 1: Laying the Foundation</p>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar" style="width: 15%"></div>
+                            </div>
+                            <p style="font-size: 0.875rem; color: var(--gray-600);">15% Complete</p>
+                        </div>
+
+                        <h2 style="padding-top: 1rem;">New Schematics (Recommended)</h2>
+                        <div class="blueprint-card">
+                            <h3>Blueprint: Intro to UI/UX Architecture</h3>
+                            <p>Based on your interest in Graphic Design, this blueprint covers the structural design of user interfaces.</p>
+                            <button class="button-light" style="margin-top: 1rem;">View Blueprint</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Right Column: Toolbox & Keystones -->
+                    <div class="dashboard-sidebar">
+                        <div class="card">
+                            <h2>My Toolbox</h2>
+                            <div class="toolbox-tags">
+                                <span class="tag-blue">Python</span>
+                                <span class="tag-green">Graphic Design</span>
+                                <span class="tag-gray">HTML</span>
+                                <span class="tag-gray">CSS</span>
+                            </div>
+                        </div>
+                        
+                        <div class="card">
+                            <h2>Upcoming Keystones</h2>
+                            <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                                <p><strong>Python:</strong> Project 2 (Due Oct 28)</p>
+                                <p><strong>Design:</strong> Moodboard (Due Oct 30)</p>
+                                <a href="#" onclick="app.showView('keystones')" class="sidebar-link" style="margin-top: 0.5rem;">View All Keystones...</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 3. Teacher View: Master's Hub (Dashboard) -->
+            <div id="view-teacher" class="view-hidden fade-in">
+                <h1>Master's Hub</h1>
+                <div class="dashboard-grid">
+                    <!-- Left Column: PD & Resources -->
+                    <div class="dashboard-main">
+                        <h2>My PD Credentials</h2>
+                        
+                        <div class="blueprint-card">
+                            <h3>Blueprint: Designing Your Digital Classroom</h3>
+                            <p style="color: var(--green-600); font-weight: 500; margin-bottom: 0.5rem;">Completed: Sept 2024</p>
+                            <p>A comprehensive blueprint on structuring virtual learning environments for maximum engagement.</p>
+                        </div>
+                        
+                        <h2 style="padding-top: 1rem;">Resource Library</h2>
+                        <div class="card">
+                            <ul style="list-style: disc; list-style-position: inside; display: flex; flex-direction: column; gap: 0.5rem;">
+                                <li><a href="#" class="sidebar-link">Downloadable: Lesson Plan Templates</a></li>
+                                <li><a href="#" class="sidebar-link">Guide: The Architecture of Student Engagement</a></li>
+                                <li><a href="#" class="sidebar-link">Toolkit: Digital Assessment Tools</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <!-- Right Column: Faculty Lounge -->
+                    <div class="dashboard-sidebar">
+                        <div class="card">
+                            <h2>Faculty Lounge</h2>
+                            <p style="color: var(--gray-600); margin-bottom: 1rem;">A private community space for Master Architects.</p>
+                            
+                            <h4 style="font-weight: 700; margin-bottom: 0.5rem;">Active Discussions:</h4>
+                            <div style="display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.875rem;">
+                                <p>"Strategies for 'Keystone' project feedback?"</p>
+                                <p>"New 'Digital Classroom' blueprint - thoughts?"</p>
+                                <button class="button-light button-full" style="margin-top: 1rem;">
+                                    Enter the Lounge
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. Shared View: Blueprint Library (Courses) -->
+            <div id="view-courses" class="view-hidden fade-in">
+                <h1>Blueprint Library</h1>
+                
+                <!-- Tabs for Student/Teacher -->
+                <div class="tabs">
+                    <nav class="tab-nav">
+                        <button id="tab-student" onclick="app.showCourseTab('student')" class="tab-button active">
+                            For Apprentices (Students)
+                        </button>
+                        <button id="tab-teacher" onclick="app.showCourseTab('teacher')" class="tab-button">
+                            For Master Architects (Teachers)
+                        </button>
+                    </nav>
+                </div>
+
+                <!-- Student Courses Content -->
+                <div id="courses-student-content" class="course-grid">
+                    <div class="blueprint-card">
+                        <h3>Blueprint: The Foundation of Python</h3>
+                        <p>A 6-phase blueprint to build a solid Python foundation, from variables to data structures.</p>
+                    </div>
+                    <div class="blueprint-card">
+                        <h3>Blueprint: Modern Graphic Design</h3>
+                        <p>Learn the principles of color theory, typography, and layout. Your Master Build: a full brand identity.</p>
+                    </div>
+                    <div class="blueprint-card">
+                        <h3>Blueprint: Web Structure (HTML & CSS)</h3>
+                        <p>Construct websites from the ground up, learning the core framework of the modern web.</p>
+                    </div>
+                </div>
+
+                <!-- Teacher Courses Content -->
+                <div id="courses-teacher-content" class="course-grid view-hidden">
+                    <div class="blueprint-card">
+                        <h3>Blueprint: Designing Your Digital Classroom</h3>
+                        <p>Learn to architect engaging, efficient, and equitable digital learning environments for your students.</p>
+                    </div>
+                    <div class="blueprint-card">
+                        <h3>Blueprint: The Architecture of Student Engagement</h3>
+                        <p>A pedagogical blueprint on building systems that motivate and inspire students.</p>
+                    </div>
+                    <div class="blueprint-card">
+                        <h3>Blueprint: Leading a 21st-Century School</h3>
+                        <p>For administrators and teacher-leaders. Design the structural changes your school needs to thrive.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 5. Student View: My Keystones (Assignments) -->
+            <div id="view-keystones" class="view-hidden fade-in">
+                <h1>My Keystones</h1>
+                <div class="keystones-grid">
+                    <!-- To-Do -->
+                    <div class="card">
+                        <h2>Pending Submission</h2>
+                        <div class="keystone-column">
+                            <div class="keystone-item">
+                                <div>
+                                    <h3>Python: Project 2</h3>
+                                    <p>Due: October 28, 2024</p>
+                                </div>
+                                <button class="keystone-submit-button">
+                                    Submit Keystone
+                                </button>
+                            </div>
+                            <div class="keystone-item">
+                                <div>
+                                    <h3>Design: Moodboard</h3>
+                                    <p>Due: October 30, 2024</p>
+                                </div>
+                                <button class="keystone-submit-button">
+                                    Submit Keystone
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Graded -->
+                    <div class="card">
+                        <h2>Graded (Structural Review)</h2>
+                        <div class="keystone-column">
+                            <div class="keystone-item">
+                                <div style="flex-grow: 1;">
+                                    <h3>Python: Project 1</h3>
+                                    <p>Submitted: October 20, 2024</p>
+                                    <p style="font-size: 0.8rem; margin-top: 0.5rem;"><strong>Structural Review:</strong> "Excellent work on the 'foundation' (variables). 'Reinforcement' needed on looping structures."</p>
+                                </div>
+                                <span class="grade">92%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 6. New View: Mock Tests -->
+            <div id="view-mock-tests" class="view-hidden fade-in">
+                <h1>Mock Tests</h1>
+                <div class="card">
+                    <h2>Available Tests</h2>
+                    <p>This section will contain mock tests for various subjects. (e.g., Python, Graphic Design).</p>
+                    
+                    <div class="test-item">
+                        <div>
+                            <h3>Python Fundamentals Practice Test</h3>
+                            <p>30 Questions | 45 Minutes</p>
+                        </div>
+                        <button class="start-test-button">
+                            Start Test
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 7. New View: Student Reports (for Teachers) -->
+            <div id="view-student-reports" class="view-hidden fade-in">
+                <h1>Student Reports</h1>
+                <div class="card">
+                    <h2>Class Progress</h2>
+                    <p>This section is for Master Architects to view reports on student progress, grades, and engagement.</p>
+                    
+                    <div class="report-item">
+                        <h3>"Foundation of Python" Cohort</h3>
+                        <p style="margin-bottom: 0.5rem;">Average Completion: 62%</p>
+                        <button class="button-light">
+                            View Detailed Report
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- 
+      JavaScript Application Logic 
+      Manages state and view switching.
+    -->
+    <script>
+        // Create a simple app namespace
+        window.app = {
+            // 1. STATE
+            state: {
+                currentUserRole: 'public', // 'public', 'student', 'teacher'
+                currentView: 'public',
+            },
+            
+            // 2. INIT
+            init: function() {
+                this.updateNavbar();
+                this.showView('public');
+                console.log('ArchiLearn App Initialized (Vanilla CSS)');
+            },
+            
+            // 3. NAVIGATION
+            showView: function(viewId, subView) {
+                const allViews = [
+                    'view-public', 'view-student', 'view-teacher', 
+                    'view-courses', 'view-keystones', 'view-mock-tests', 'view-student-reports'
+                ];
+                allViews.forEach(id => {
+                    const el = document.getElementById(id);
+                    if (el) el.classList.add('view-hidden');
+                });
+                
+                const viewElement = document.getElementById(`view-${viewId}`);
+                if (viewElement) {
+                    viewElement.classList.remove('view-hidden');
+                    this.state.currentView = viewId;
+                } else {
+                    console.error('View not found:', viewId);
+                    document.getElementById('view-public').classList.remove('view-hidden'); // Fallback
+                }
+                
+                // Handle sub-views (like course tabs)
+                if (viewId === 'courses') {
+                    const defaultTab = this.state.currentUserRole === 'teacher' ? 'teacher' : 'student';
+                    this.showCourseTab(subView || defaultTab);
+                }
+                
+                // Update active nav links
+                this.updateActiveNavLinks(viewId);
+            },
+
+            // 4. NAVBARS
+            updateNavbar: function() {
+                document.getElementById('navbar-public').classList.add('view-hidden');
+                document.getElementById('navbar-student').classList.add('view-hidden');
+                document.getElementById('navbar-teacher').classList.add('view-hidden');
+                
+                const navbarId = `navbar-${this.state.currentUserRole}`;
+                document.getElementById(navbarId).classList.remove('view-hidden');
+            },
+            
+            updateActiveNavLinks: function(viewId) {
+                // Get the current navbar
+                const navbarId = `navbar-${this.state.currentUserRole}`;
+                const currentNav = document.getElementById(navbarId);
+                if (!currentNav) return;
+
+                // Remove 'active' from all links in this nav
+                const links = currentNav.querySelectorAll('.nav-links a');
+                links.forEach(link => link.classList.remove('active'));
+
+                // Add 'active' to the correct link
+                let activeLink;
+                switch(viewId) {
+                    case 'student':
+                        activeLink = currentNav.querySelector('a[onclick*="app.showView(\'student\')"]');
+                        break;
+                    case 'teacher':
+                        activeLink = currentNav.querySelector('a[onclick*="app.showView(\'teacher\')"]');
+                        break;
+                    case 'courses':
+                        if (this.state.currentUserRole === 'student') {
+                            activeLink = currentNav.querySelector('a[onclick*="app.showView(\'courses\', \'student\')"]');
+                        } else {
+                            activeLink = currentNav.querySelector('a[onclick*="app.showView(\'courses\', \'teacher\')"]');
+                        }
+                        break;
+                    case 'keystones':
+                        activeLink = currentNav.querySelector('a[onclick*="app.showView(\'keystones\')"]');
+                        break;
+                    case 'mock-tests':
+                        activeLink = currentNav.querySelector('a[onclick*="app.showView(\'mock-tests\')"]');
+                        break;
+                    case 'student-reports':
+                        activeLink = currentNav.querySelector('a[onclick*="app.showView(\'student-reports\')"]');
+                        break;
+                }
+                
+                if (activeLink) {
+                    activeLink.classList.add('active');
+                }
+            },
+            
+            // 5. AUTHENTICATION (Demo)
+            login: function(role) {
+                if (role === 'student' || role === 'teacher') {
+                    this.state.currentUserRole = role;
+                    this.updateNavbar();
+                    this.showView(role); // Show the dashboard for that role
+                    this.hideDemoLogin();
+                }
+            },
+            
+            logout: function() {
+                this.state.currentUserRole = 'public';
+                this.updateNavbar();
+                this.showView('public');
+            },
+            
+            // 6. UI HELPERS
+            showDemoLogin: function() {
+                document.getElementById('demo-login-modal').classList.remove('view-hidden');
+            },
+            
+            hideDemoLogin: function() {
+                document.getElementById('demo-login-modal').classList.add('view-hidden');
+            },
+            
+            showCourseTab: function(tabId) {
+                document.getElementById('courses-student-content').classList.add('view-hidden');
+                document.getElementById('courses-teacher-content').classList.add('view-hidden');
+                document.getElementById(`courses-${tabId}-content`).classList.remove('view-hidden');
+                
+                document.getElementById('tab-student').classList.remove('active');
+                document.getElementById('tab-teacher').classList.remove('active');
+                document.getElementById(`tab-${tabId}`).classList.add('active');
+            }
+        };
+
+        // Run the app
+        window.onload = function() {
+            window.app.init();
+        };
+
+    </script>
+</body>
+</html>
